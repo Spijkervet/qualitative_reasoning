@@ -2,7 +2,6 @@ import copy
 import numpy as np
 
 class Node:
-
     def __init__(self, nodeId, inflow, outflow, volume, relation): 
         self.nodeId = nodeId
         self.inflow = inflow
@@ -25,8 +24,8 @@ class States:
         self.states[der][1] = '+'
         while (self.storedstates[-1] != self.states):
             self.storedstates += [copy.deepcopy(self.states)]
-            print(self.storedstates)
             self.calcState(nodes)
+        print(self.storedstates)
 
     def calcState(self, nodes):
         for ind, item in enumerate(self.states):
@@ -36,17 +35,31 @@ class States:
                 self.states[ind][0] = "+"
 
     def reinforceRela(self, relation, nodes):
+        calc = Calculation()
         for ind, item in enumerate(relation[0]):
-            if (item == '+'):
-                self.states[ind][1] = "+"
+            if (item != '0'):
+                self.states[ind][1] = calc.calcRule(item,"+")
 
-    
-    def calcRule(item1,item2):
+class Calculation:   
+    def __init__(self):
+        pass
+
+    def calcRule(self, item1,item2):
         if (item1 == '+'):
             if (item2 == '-' or item2 == '?'):
                 return '?'
             else:
                 return '+'
+        elif (item1 == '0'):
+            return item2
+        elif (item1 == '?'):
+            return '?'
+        else:
+            if (item2 == '+' or item2 == '-'):
+                return '?'
+            else:
+                return '-'
+                
 
 class LoadSystem:
     # relaGrid is a number of nodes by number of nodes grid reading from 
@@ -56,7 +69,7 @@ class LoadSystem:
         self.nodes = []
         self.createNodes(relaGrid)
         for i in range(0, len(self.nodes)):
-            States(self,i)
+            States(self,i)            
 
     def createNodes(self, grid):
         for i in range(0,len(grid)):
@@ -66,4 +79,4 @@ class LoadSystem:
 
     
 
-LoadSystem([["0","+","0"],["0","0","0"],["0","+","0"]])
+LoadSystem([["0","+","0","0"],["0","0","0","-"],["0","+","0","0"],["0","+","0","0"]])
