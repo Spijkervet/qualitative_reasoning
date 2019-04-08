@@ -1,3 +1,6 @@
+#!/usr/local/bin/python3
+
+import argparse
 from generate import generate
 from clean import clean_states, clean_transitions
 from itertools import product
@@ -18,6 +21,11 @@ if __name__ == '__main__':
     #         Model("VC", MagnitudeValues.ZERO, "Outflow", "Volume")
     # ]
 
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-D', default='./results')
+    args = parser.parse_args()
+
     states = generate()
     new_states = clean_states(states)
 
@@ -27,5 +35,5 @@ if __name__ == '__main__':
     new_transitions = clean_transitions(transitions)
     print('new transitions: {}, old transitions {}'.format(len(new_transitions), len(transitions)))
 
-    graph = Graph(new_states)
+    graph = Graph(new_states, path=args.D)
     graph.write()

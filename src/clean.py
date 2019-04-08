@@ -81,51 +81,51 @@ def transition_validity_check(s1, s2):
     for q in ['Volume', 'Inflow']:
         if s1.quantities[q].derivative.val == DerivativeValues.ZERO:
             if s1.quantities[q].magnitude.val != s2.quantities[q].magnitude.val:
-                tprint('If state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
+                tprint('\n\nIf state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
                 tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                 return False
 
         if s1.quantities[q].derivative.val == DerivativeValues.MAX:
             if not s2.quantities[q].magnitude.is_gequal(s1.quantities[q].magnitude):
-                tprint('If state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
+                tprint('\n\nIf state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
                 tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                 return False
 
         if s1.quantities[q].derivative.val == DerivativeValues.MIN:
             if not s1.quantities[q].magnitude.is_gequal(s2.quantities[q].magnitude):
-                tprint('If state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
+                tprint('\n\nIf state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
                 tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                 return False
 
         if s1.quantities[q].derivative.val == DerivativeValues.MAX:
             if s2.quantities[q].derivative.val == DerivativeValues.MIN:
-                tprint('If state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
+                tprint('\n\nIf state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
                 tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                 return False
 
         if s1.quantities[q].derivative.val == DerivativeValues.MIN:
             if s2.quantities[q].derivative.val == DerivativeValues.MAX:
-                tprint('If state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
+                tprint('\n\nIf state 1: {}({},{}):'.format(q, '?', s1.quantities[q].derivative.val))
                 tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                 return False
 
         if s1.quantities[q].magnitude.val == MagnitudeValues.MAX:
             if s1.quantities[q].derivative.val == DerivativeValues.MIN:
                 if not s2.quantities[q].magnitude.val == MagnitudeValues.PLUS:
-                    tprint('If state 1: {}({},{}):'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val))
+                    tprint('\n\nIf state 1: {}({},{}):'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val))
                     tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                     return False
 
         if s1.quantities[q].magnitude.val == MagnitudeValues.ZERO:
             if s1.quantities[q].derivative.val == DerivativeValues.MAX:
                 if not s2.quantities[q].magnitude.val == MagnitudeValues.PLUS:
-                    tprint('If state 1: {}({},{}):'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val))
+                    tprint('\n\nIf state 1: {}({},{}):'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val))
                     tprint('{}({},{}) cannot transition to {}({},{})'.format(q, s1.quantities[q].magnitude.val, s1.quantities[q].derivative.val, q, s2.quantities[q].magnitude.val, s2.quantities[q].derivative.val))
                     return False
 
     if s1.quantities['Inflow'].magnitude.val == MagnitudeValues.MAX:
         if not s2.quantities['Volume'].derivative.val == DerivativeValues.MAX:
-            tprint('If state 1: {}({},{}):'.format('Inflow', s1.quantities['Inflow'].magnitude.val, s1.quantities['Inflow'].derivative.val))
+            tprint('\n\nIf state 1: {}({},{}):'.format('Inflow', s1.quantities['Inflow'].magnitude.val, s1.quantities['Inflow'].derivative.val))
             tprint('{}({},{}) cannot transition to {}({},{})'.format('Inflow', s1.quantities['Inflow'].magnitude.val, s1.quantities['Inflow'].derivative.val, 'Volume', s2.quantities['Volume'].magnitude.val, s2.quantities['Volume'].derivative.val))
             return False
 

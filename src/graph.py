@@ -1,10 +1,12 @@
 import pydot
+import os
 
 class Graph():
 
-    def __init__(self, states):
+    def __init__(self, states, path='data'):
         self.graph = pydot.Dot(graph_type='digraph')
         self.states = states
+        self.path = path
         # self.nodes = [pydot.Node()] * len(self.states)
         self.nodes = []
         self.create_graph()
@@ -30,5 +32,7 @@ class Graph():
                 self.graph.add_edge(pydot.Edge(s.node, t.node)) #, label=self.node_desc(t)))
 
     def write(self):
-        self.graph.write_png('graph.png')
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+        self.graph.write_png(os.path.join(self.path, 'graph.png'))
         self.graph.create_svg()
