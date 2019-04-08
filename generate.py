@@ -1,6 +1,7 @@
 
 from variables import MagnitudeValues, Magnitude, DerivativeValues, Derivative
 from quantity import Quantity
+from state import State
 from itertools import product
 
 def generate():
@@ -8,29 +9,30 @@ def generate():
     magnitudes = list(map(int, MagnitudeValues))
     derivatives = list(map(int, DerivativeValues))
 
-    system = {
+    state = State()
+    state.quantities = {
+        # ASSUMPTION: Inflow has no MAX
+        "Inflow": (magnitudes[:2], derivatives),
         "Volume": (magnitudes, derivatives),
-        # ASSUMPTION: Inflow has no negative magnitude.
-        "Inflow": (magnitudes[1:], derivatives),
-        "Outflow": (magnitudes, derivatives)
+        "Outflow": (magnitudes, derivatives),
     }
 
     states = []
     temp = []
 
-    for s in system:
-        temp.extend(system[s])
+    for s in state.quantities:
+        temp.extend(state.quantities[s])
 
 
     prod = product(*temp)
     for p in prod:
         idx = 0
-        state = {}
-        for s in system:
-            state[s] = {}
-            mag_bound = system[s][0][-1]
+        new_state = State()
+        for s in state.quantities:
+            new_state.quantities[s] = {}
+            mag_bound = state.quantities[s][0][-1]
             q = Quantity(Magnitude(p[idx], maximum=mag_bound), Derivative(p[idx+1]))
-            state[s] = q
+            new_state.quantities[s] = q
             idx += 2
-        states.append(state)
+        states.append(new_state)
     return states

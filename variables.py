@@ -16,6 +16,11 @@ class Magnitude():
         self.val = MagnitudeValues(val)
         self.maximum = maximum
 
+    def is_gequal(self, other):
+        if self.val >= other.val:
+            return True
+        return False
+
 class Derivative():
 
     def __init__(self, val, maximum=DerivativeValues.MAX):

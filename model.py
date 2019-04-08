@@ -5,3 +5,4 @@ class Model():
         self.value = value
         self.Q1 = Q1
         self.Q2 = Q2
+

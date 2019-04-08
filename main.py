@@ -4,24 +4,28 @@ from itertools import product
 from model import Model
 from variables import MagnitudeValues
 
+from graph import Graph
+
 if __name__ == '__main__':
 
-    # OUTFLOW = VOLUME, constrained on magnitude and derivative (because of proportionality)
-    model = [
-            Model("I+", None, ("Tab", "Inflow"), ("Bathtub", "Volume")),
-            Model("I-", None, ("Drain", "Outflow"), ("Bathtub", "Volume")),
-            Model("P+", None, ("Container", "Volume"), ("Drain", "Outflow")),
-            Model("VC", MagnitudeValues.MAX, ("Container", "Volume"), ("Drain", "Outflow")),
-            Model("VC", MagnitudeValues.ZERO, ("Container", "Volume"), ("Drain", "Outflow")),
-            Model("VC", MagnitudeValues.MAX, ("Drain", "Outflow"), ("Container", "Volume")),
-            Model("VC", MagnitudeValues.ZERO, ("Drain", "Outflow"), ("Container", "Volume"))
-        ]
+    # model = [
+    #         Model("I+", None, "Inflow", "Volume"),
+    #         Model("I-", None, "Outflow", "Volume"),
+    #         Model("P+", None, "Volume", "Outflow"),
+    #         Model("VC", MagnitudeValues.MAX, "Volume", "Outflow"),
+    #         Model("VC", MagnitudeValues.ZERO, "Volume", "Outflow"),
+    #         Model("VC", MagnitudeValues.MAX, "Outflow", "Volume"),
+    #         Model("VC", MagnitudeValues.ZERO, "Outflow", "Volume")
+    # ]
 
     states = generate()
     new_states = clean_states(states)
+
     print('new states: {}, old states {}'.format(len(new_states), len(states)))
 
     transitions = list(product(new_states, new_states))
     new_transitions = clean_transitions(transitions)
     print('new transitions: {}, old transitions {}'.format(len(new_transitions), len(transitions)))
 
+    graph = Graph(new_states)
+    graph.write()
