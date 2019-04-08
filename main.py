@@ -6,6 +6,7 @@ from variables import MagnitudeValues
 
 if __name__ == '__main__':
 
+    # OUTFLOW = VOLUME, constrained on magnitude and derivative (because of proportionality)
     model = [
             Model("I+", None, ("Tab", "Inflow"), ("Bathtub", "Volume")),
             Model("I-", None, ("Drain", "Outflow"), ("Bathtub", "Volume")),
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     new_states = clean_states(states)
     print('new states: {}, old states {}'.format(len(new_states), len(states)))
 
-    transitions = list(product(states, states))
+    transitions = list(product(new_states, new_states))
     new_transitions = clean_transitions(transitions)
     print('new transitions: {}, old transitions {}'.format(len(new_transitions), len(transitions)))
 
