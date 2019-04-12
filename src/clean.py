@@ -2,11 +2,11 @@ from variables import MagnitudeValues, DerivativeValues
 from utils import tprint
 
 def validity_check(state):
+    if not state.quantities['Volume'].is_equal(state.quantities['Outflow']):
+        return False
+
+
     for s in state.quantities:
-
-        if not state.quantities['Volume'].is_equal(state.quantities['Outflow']):
-            return False
-
         # for quantity in state[s]:
         magnitude = state.quantities[s].magnitude.val
         derivative = state.quantities[s].derivative.val
@@ -31,43 +31,56 @@ def validity_check(state):
             tprint('{}({}, {}) is an invalid state'.format(s, magnitude, derivative))
             return False
 
+
         # ASSUMPTION: Outflow cannot be MAX AND become more positive
         if magnitude == MagnitudeValues.MAX and derivative == DerivativeValues.MAX:
             tprint('{}({}, {}) is an invalid state'.format(s, magnitude, derivative))
             return False
+
 
         # ASSUMPTION: Outflow cannot be ZERO AND become more negative
         if magnitude == MagnitudeValues.ZERO and derivative == DerivativeValues.MIN:
             tprint('{}({}, {}) is an invalid state'.format(s, magnitude, derivative))
             return False
 
+    if state.quantities['Inflow'].magnitude.val == MagnitudeValues.PLUS:
+        if state.quantities['Volume'].magnitude.val == MagnitudeValues.MAX:
+            return True
+
     if state.quantities['Inflow'].magnitude.val == MagnitudeValues.ZERO:
-        # ASSUMPTION: Inflow cannot be zero if the volume derivative is maximum
-        if state.quantities['Volume'].derivative.val == DerivativeValues.MAX:
-            tprint('{}({}, {}) and {}({},{}) is an invalid state'.format('Inflow', magnitude, '?', 'Volume', '?', state.quantities['Volume'].derivative.val))
+        if state.quantities['Volume'].magnitude.val == MagnitudeValues.PLUS and not state.quantities['Volume'].derivative.val == DerivativeValues.MIN:
             return False
+
+        # if not state.quantities['Volume'].derivative.val == DerivativeValues.MAX:
+        #     return False
+
 
         # ASSUMPTION: Inflow cannot be zero, and Volume magnitude cannot be maximum if the volume derivative is zero
         if state.quantities['Volume'].magnitude.val == MagnitudeValues.MAX and state.quantities['Volume'].derivative.val == DerivativeValues.ZERO:
             tprint('{}({}, {}) and {}({},{}) is an invalid state'.format('Inflow', state.quantities['Inflow'].magnitude.val, '?', 'Volume', state.quantities['Volume'].magnitude.val, state.quantities['Volume'].derivative.val))
             return False
 
-        # ASSUMPTION: Inflow cannot be zero while the Volume magnitude is maximum
-        if state.quantities['Volume'].magnitude.val == MagnitudeValues.MAX:
-            tprint('{}({},{}) and {}({},{}) is an invalid state'.format('Inflow', state.quantities['Inflow'].magnitude.val, '?', 'Volume', state.quantities['Volume'].magnitude.val, '?'))
-            return False
+        # # ASSUMPTION: Inflow cannot be zero while the Volume magnitude is maximum
+        # if state.quantities['Volume'].magnitude.val == MagnitudeValues.MAX:
+        #     tprint('{}({},{}) and {}({},{}) is an invalid state'.format('Inflow', state.quantities['Inflow'].magnitude.val, '?', 'Volume', state.quantities['Volume'].magnitude.val, '?'))
+        #     return False
 
     # ASSUMPTION: Inflow magnitude cannot be plus while the Volume magnitude is zero and the Volume derivative value is not equal to the maximum
     if state.quantities['Inflow'].magnitude.val == MagnitudeValues.PLUS:
         if state.quantities['Volume'].magnitude.val == MagnitudeValues.ZERO and state.quantities['Volume'].derivative.val != DerivativeValues.MAX:
             tprint('{}({},{}) and {}({},{}) is an invalid state'.format('Inflow', state.quantities['Inflow'].magnitude.val, '?', 'Volume', state.quantities['Volume'].magnitude.val, '?'))
             return False
+
+    if state.quantities['Inflow'].magnitude.val == MagnitudeValues.ZERO:
+        if state.quantities['Volume'].derivative.val == DerivativeValues.MAX:
+            return False
+
     return True
 
 
 
 
-def clean_states(states):
+def clean_states(states, model):
     new_states = []
     for state in states:
         if validity_check(state):
@@ -141,6 +154,7 @@ def transition_validity_check(s1, s2):
         if s1.quantities['Volume'].derivative.val == DerivativeValues.ZERO and s2.quantities['Volume'].derivative.val == DerivativeValues.MAX:
             return False
 
+    # ASSUMPTION: The Volume derivative of state 2 cannot be maximum if the Inflow derivative of state 1 is negative
     if s1.quantities['Inflow'].derivative.val == DerivativeValues.MIN:
         if s2.quantities['Volume'].derivative.val == DerivativeValues.MAX:
             return False
