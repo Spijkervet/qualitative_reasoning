@@ -12,7 +12,7 @@ class Graph():
         self.create_graph()
 
     def node_desc(self, state):
-        s = ''
+        s = 'STATE {}\n'.format(state.id)
         for quantity in state.quantities:
             s += '{}: {}\n'.format(quantity, state.quantities[quantity])
         return s
@@ -29,10 +29,13 @@ class Graph():
     def create_transitions(self):
         for s in self.states:
             for t in s.transitions:
-                self.graph.add_edge(pydot.Edge(s.node, t.node)) #, label=self.node_desc(t)))
+                self.graph.add_edge(pydot.Edge(s.node, t.node, tooltip=s.tooltip)) #, label=self.node_desc(t)))
 
     def write(self):
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         self.graph.write_png(os.path.join(self.path, 'graph.png'))
-        self.graph.create_svg()
+
+        svg = self.graph.create_svg()
+        with open(os.path.join(self.path, 'graph.svg'), 'wb') as s:
+            s.write(svg)

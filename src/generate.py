@@ -4,12 +4,13 @@ from quantity import Quantity
 from state import State
 from itertools import product
 
+
 def generate():
 
     magnitudes = list(map(int, MagnitudeValues))
     derivatives = list(map(int, DerivativeValues))
 
-    state = State()
+    state = State(0)
     state.quantities = {
         # ASSUMPTION: Inflow has no MAX
         "Inflow": (magnitudes[:2], derivatives),
@@ -27,7 +28,7 @@ def generate():
     prod = product(*temp)
     for p in prod:
         idx = 0
-        new_state = State()
+        new_state = State(len(states))
         for s in state.quantities:
             new_state.quantities[s] = {}
             mag_bound = state.quantities[s][0][-1]
